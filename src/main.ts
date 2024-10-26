@@ -18,7 +18,7 @@ function tick(time) {
 }
 
 function update(state: State, delta: number) {
-
+   state.generator.next();
 }
 
 function render(state:State, ctx: CanvasRenderingContext2D) {

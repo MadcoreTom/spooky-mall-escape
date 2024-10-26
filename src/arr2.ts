@@ -1,7 +1,7 @@
 export class Arr2<T> {
     private data: T[];
     public constructor(public readonly width, public readonly height, private readonly defaultValue: T) {
-        this.data = new Array().fill(defaultValue, 0, width * height);
+        this.data = new Array<T>().fill(defaultValue, 0, width * height);
     }
 
     public inRange(x: number, y: number): boolean {

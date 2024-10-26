@@ -30,11 +30,11 @@ export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGH
         }
     }
 
-    player.draw(ctx,[WIDTH/2 - PLAYER_SIZE / 2* SCALE , HEIGHT/2- PLAYER_SIZE / 2 * SCALE], Math.floor(Math.random()*4), SCALE * PLAYER_SIZE);
-    // light
+    player.draw(ctx, [WIDTH / 2 - PLAYER_SIZE / 2 * SCALE, HEIGHT / 2 - PLAYER_SIZE / 2 * SCALE], state.walkFrame, SCALE * PLAYER_SIZE);
     
-ctx.fillStyle = gradient;
-ctx.fillRect(0,0,WIDTH,HEIGHT);
+    // light
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
 }
 
 

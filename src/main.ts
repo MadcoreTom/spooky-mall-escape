@@ -54,10 +54,18 @@ function update(state: State, delta: number) {
         }
 
         // test collision here
-        const future = [state.pos[0] + movement[0], state.pos[1] + movement[1]];
-        if(!state.maze.get(Math.floor(future[0]),Math.floor(future[1])).solid){
-            state.pos[0] += movement[0];
-            state.pos[1] += movement[1];
+        if (movement[0] != 0 || movement[1] != 0) {
+            const future = [state.pos[0] + movement[0], state.pos[1] + movement[1]];
+            if (!state.maze.get(Math.floor(future[0]), Math.floor(future[1])).solid) {
+                state.pos[0] += movement[0];
+                state.pos[1] += movement[1];
+                // walk animation
+                state.walkTimer += delta;
+                if (state.walkTimer > 100) {
+                    state.walkTimer -= 100;
+                    state.walkFrame = (state.walkFrame + 1) % 4;
+                }
+            }
         }
     }
 

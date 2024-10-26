@@ -3,10 +3,14 @@ import { State, XY } from "./state";
 
 const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
+const scenes = new MyImage("scene.png", 1,1);
+const instructions = new MyImage("instructions.png", 2,2);
 const SCALE = 400;
 const PLAYER_SIZE = 0.2;
 
 let gradient : any;
+
+
 
 export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGHT]:XY) {
 
@@ -18,6 +22,36 @@ export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGH
         gradient.addColorStop(0.4, "rgba(22,8,26,0.3)");
         gradient.addColorStop(1, "rgb(22,8,26)");
     }
+
+    if(state.mode == "walk"){
+        renderWalk(state,ctx,[WIDTH,HEIGHT]);
+    } else  if(state.mode == "spotlight"){
+        renderSpotlight(state,ctx,[WIDTH,HEIGHT]);
+    }
+
+    instructions.draw(ctx,[0,HEIGHT-50],state.mode=="walk" ? 0 : 2,50)
+    instructions.draw(ctx,[50,HEIGHT-50],state.mode=="walk" ? 1 : 3,50)
+}
+
+export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGHT]:XY) {
+
+    const light = ctx.createRadialGradient(state.mousePos[0],state.mousePos[1],HEIGHT/8,state.mousePos[0],state.mousePos[1],HEIGHT/4);
+
+    // Add three color stops
+    light.addColorStop(0, "rgba(0,0,0,0)");
+    light.addColorStop(0.4, "rgba(22,8,26,0.3)");
+    light.addColorStop(1, "rgb(22,8,26)");
+
+    scenes.draw(ctx,[0,0],0, WIDTH);
+    
+    // light
+    ctx.fillStyle = light;
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+}
+
+export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGHT]:XY) {
+
+
 
     const sx = Math.floor(state.pos[0]-2);
     const sy = Math.floor(state.pos[1]-2);
@@ -31,7 +65,7 @@ export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGH
     }
 
     player.draw(ctx, [WIDTH / 2 - PLAYER_SIZE / 2 * SCALE, HEIGHT / 2 - PLAYER_SIZE / 2 * SCALE], state.walkFrame, SCALE * PLAYER_SIZE);
-    
+
     // light
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);

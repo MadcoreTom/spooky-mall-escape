@@ -4,11 +4,13 @@ import { mazeGenerator } from "./maze";
 export type XY = [number, number];
 
 export type State = {
-    maze: Arr2<{solid:boolean, room:number}>,
+    maze: Arr2<{ solid: boolean, room: number }>,
     generator: Iterator<void, void>,
     pos: XY,
-    walkFrame:number,
-    walkTimer:number
+    walkFrame: number,
+    walkTimer: number,
+    mode: "walk" | "spotlight",
+    mousePos:XY
 };
 
 export function initState(): State {
@@ -19,7 +21,9 @@ export function initState(): State {
         maze,
         generator: mazeGenerator(maze),
         pos: [1.5, 1.5],
-        walkFrame:0,
-        walkTimer: 0
+        walkFrame: 0,
+        walkTimer: 0,
+        mode: "walk",
+        mousePos:[100,100]
     }
 }

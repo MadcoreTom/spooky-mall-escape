@@ -1,4 +1,4 @@
-import { ControlKey, initKeyboard, keyDown } from "./keyboard";
+import { ControlKey, initKeyboard, keyDown, keyPressed } from "./keyboard";
 import { render } from "./render";
 import { initState, State, XY } from "./state";
 
@@ -16,6 +16,11 @@ initKeyboard();
 
 const state = initState();
 let lastTime = 0;
+
+canvas.addEventListener("mousemove", evt=>{
+    state.mousePos[0] = evt.offsetX;
+    state.mousePos[1] = evt.offsetY;
+})
 
 function tick(time) {
     const delta = Math.min(100, time - lastTime);
@@ -67,6 +72,10 @@ function update(state: State, delta: number) {
                 }
             }
         }
+    }
+
+    if(keyPressed(ControlKey.DEBUG)){
+        state.mode = state.mode == "spotlight" ? "walk" : "spotlight";
     }
 
 }

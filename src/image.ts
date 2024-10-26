@@ -19,6 +19,6 @@ export class MyImage {
         const sy = sh * Math.floor(idx / this.cols);
         ctx.drawImage(this.img,
             sx, sy, sw, sh,
-            pos[0], pos[1], scale, scale);
+            Math.floor(pos[0]),Math.floor(pos[1]), scale, scale);
     }
 }

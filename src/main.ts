@@ -4,6 +4,14 @@ import { initState, State, XY } from "./state";
 
 const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+// turn of smoothing for image scaling
+ctx['webkitImageSmoothingEnabled'] = false;
+ctx['mozImageSmoothingEnabled'] = false;
+ctx.imageSmoothingEnabled = false; /// future
+
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
 initKeyboard();
 
 const state = initState();
@@ -58,24 +66,31 @@ function update(state: State, delta: number) {
 }
 
 const tiles = new MyImage("tiles.png", 2,12);
-const SCALE = 50;
+const SCALE = 400;
 function render(state: State, ctx: CanvasRenderingContext2D) {
 
-    state.maze.forEach((x, y, v) => {
-        drawTile(ctx,state,[x,y])
-    });
+    const sx = Math.floor(state.pos[0]-2);
+    const sy = Math.floor(state.pos[1]-2);
+    for(let x=0;x<5;x++){
+        for(let y=0;y<5;y++){
+            drawTile(ctx, state, [x + sx, y+sy], [
+                Math.floor(state.pos[0]  * SCALE - WIDTH / 2),
+                 Math.floor(state.pos[1] * SCALE - HEIGHT / 2)
+            ]);
+        }
+    }
 
     ctx.fillStyle = "yellow";
-    ctx.fillRect((state.pos[0] - PLAYER_SIZE / 2) * SCALE, (state.pos[1] - PLAYER_SIZE / 2) * SCALE, SCALE * PLAYER_SIZE, SCALE * PLAYER_SIZE);
+    ctx.fillRect(WIDTH/2 - PLAYER_SIZE / 2* SCALE , HEIGHT/2- PLAYER_SIZE / 2 * SCALE, SCALE * PLAYER_SIZE, SCALE * PLAYER_SIZE);
 }
 
 window.requestAnimationFrame(tick);
 
-function drawTile(ctx: CanvasRenderingContext2D, state: State, [x, y]: XY) {
-    tiles.draw(ctx, [x * SCALE, y * SCALE], tileOffset(state, x * 2, y * 2) * 2, SCALE / 2);
-    tiles.draw(ctx, [x * SCALE + SCALE / 2, y * SCALE], tileOffset(state, x * 2 + 1, y * 2) * 2 + 1, SCALE / 2);
-    tiles.draw(ctx, [x * SCALE, y * SCALE + SCALE / 2], tileOffset(state, x * 2, y * 2 + 1) * 2 + 12, SCALE / 2);
-    tiles.draw(ctx, [x * SCALE + SCALE / 2, y * SCALE + SCALE / 2], tileOffset(state, x * 2 + 1, y * 2 + 1) * 2 + 13, SCALE / 2);
+function drawTile(ctx: CanvasRenderingContext2D, state: State, [x, y]: XY, offset:XY) {
+    tiles.draw(ctx, [x * SCALE - offset[0], y * SCALE- offset[1]], tileOffset(state, x * 2, y * 2) * 2, SCALE / 2);
+    tiles.draw(ctx, [x * SCALE + SCALE / 2 - offset[0], y * SCALE- offset[1]], tileOffset(state, x * 2 + 1, y * 2) * 2 + 1, SCALE / 2);
+    tiles.draw(ctx, [x * SCALE - offset[0], y * SCALE + SCALE / 2- offset[1]], tileOffset(state, x * 2, y * 2 + 1) * 2 + 12, SCALE / 2);
+    tiles.draw(ctx, [x * SCALE + SCALE / 2 - offset[0], y * SCALE + SCALE / 2- offset[1]], tileOffset(state, x * 2 + 1, y * 2 + 1) * 2 + 13, SCALE / 2);
 }
 
 // Witchery... but it works

@@ -37,36 +37,30 @@ export function* mazeGenerator<T extends RoomTile>(arr: Arr2<T>): Iterator<void,
     yield;
 
     let cur: XY | undefined;
+    let a: T;
+    let b: T
     while ((cur = options.pop()) != undefined) {
         if (cur[0] % 2 == 1) {
             // vertical
-            const up = arr.get(cur[0], cur[1] - 1);
-            const down = arr.get(cur[0], cur[1] + 1);
-            if (!up.solid && !down.solid && up.room != down.room) {
-                arr.get(cur[0], cur[1]).solid = false;
-                const replace = Math.min(up.room, down.room);
-                const replaceWith = Math.max(up.room, down.room)
-                arr.forEach((x, y, v) => {
-                    if (v.room == replace) {
-                        v.room = replaceWith;
-                    }
-                });
-            }
-        } else if (cur[1] % 2 == 1) {
+            a = arr.get(cur[0], cur[1] - 1);
+            b = arr.get(cur[0], cur[1] + 1);
+        } else {
             // horizontal
-            const left = arr.get(cur[0]-1, cur[1] );
-            const right = arr.get(cur[0]+1, cur[1] );
-            if (!left.solid && !right.solid && left.room != right.room) {
-                arr.get(cur[0], cur[1]).solid = false;
-                const replace = Math.min(left.room, right.room);
-                const replaceWith = Math.max(left.room, right.room)
-                arr.forEach((x, y, v) => {
-                    if (v.room == replace) {
-                        v.room = replaceWith;
-                    }
-                });
-            }
+            a = arr.get(cur[0] - 1, cur[1]);
+            b = arr.get(cur[0] + 1, cur[1]);
         }
+
+        if (!a.solid && !b.solid && a.room != b.room) {
+            arr.get(cur[0], cur[1]).solid = false;
+            const replace = Math.min(a.room, b.room);
+            const replaceWith = Math.max(a.room, b.room)
+            arr.forEach((x, y, v) => {
+                if (v.room == replace) {
+                    v.room = replaceWith;
+                }
+            });
+        }
+
         yield;
     }
 

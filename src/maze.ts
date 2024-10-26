@@ -1,7 +1,6 @@
 import { Arr2 } from "./arr2";
+import { XY } from "./state";
 import { shuffle } from "./util";
-
-type XY = [number, number];
 
 type RoomTile = {
     solid: boolean,

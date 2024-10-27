@@ -1,6 +1,7 @@
 import { DoorItem, StaticItem } from "./item";
 import { ControlKey, initKeyboard, keyDown, keyPressed } from "./keyboard";
 import { render } from "./render";
+import { SOUND } from "./sound";
 import { initState, State, XY } from "./state";
 import { update } from "./update";
 import { shuffle } from "./util";
@@ -27,6 +28,7 @@ canvas.addEventListener("mousemove", evt=>{
 
 canvas.addEventListener("click", evt => {
     state.clickPos = [evt.offsetX / WIDTH, evt.offsetY / HEIGHT];
+	SOUND.resume();
 });
 
 function tick(time) {

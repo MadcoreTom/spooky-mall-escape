@@ -1,4 +1,5 @@
 import { ControlKey, keyDown } from "./keyboard";
+import { COLLECT, HURT, MENU_SELECT, SOUND } from "./sound";
 import { State, XY } from "./state";
 
 export abstract class Item {
@@ -47,7 +48,7 @@ export class BatItem extends Item {
 
 
         if (this.inRangeOfPlayer(state)) {
-            console.log("BIP");
+            SOUND.playSound(HURT);
             state.health--;
             return false;
         }
@@ -75,8 +76,9 @@ export class DoorItem extends Item {
             state.spotItem = {
                 pos:this.location,
                 id:this.itemIdx,
-                scene: Math.floor(Math.random()*2)
+                scene: Math.floor(Math.random()*3)
             }
+            SOUND.playSound(MENU_SELECT);
             return false;
         }
         return true;
@@ -93,6 +95,7 @@ export class HealthItem extends Item {
 
         if (this.inRangeOfPlayer(state) && state.health < 5) {
             state.health++;
+            SOUND.playSound(COLLECT);
             return false;
         }
         return true;

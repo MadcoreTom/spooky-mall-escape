@@ -1,6 +1,7 @@
 import { BatItem, DoorItem, HealthItem, StaticItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
 import { calcDistance } from "./maze";
+import { COLLECT, SFX_DIE, SOUND } from "./sound";
 import { initState, State, XY } from "./state";
 import { shuffle } from "./util";
 
@@ -30,6 +31,7 @@ export function updateSpotlight(state: State, delta: number) {
         const dsq = dx*dx+dy*dy;
 
         if(dsq < 0.05*0.05){
+            SOUND.playSound(COLLECT);
             state.mode = "walk";
         }
     }
@@ -39,6 +41,7 @@ export function updateMaze(state: State, delta: number) {
     const n = state.generator.next();
 
     if(state.health <= 0){
+        SOUND.playSound(SFX_DIE);
         state.mode = "dead";
         return;
     }

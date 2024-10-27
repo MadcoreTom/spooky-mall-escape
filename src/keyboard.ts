@@ -1,3 +1,5 @@
+import { SOUND } from "./sound";
+
 export enum ControlKey {
     UP,
     DOWN,
@@ -44,6 +46,7 @@ export function keyDown(keyCode: ControlKey) {
 }
 
 export function keyPressed(keyCode: ControlKey) {
+	SOUND.resume();
 	if (keys[keyCode]) {
 		keys[keyCode] = false;
 		return true;

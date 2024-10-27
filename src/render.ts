@@ -51,6 +51,12 @@ export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WI
     light.addColorStop(1, "rgb(22,8,26)");
 
     scenes.draw(ctx,[0,0],0, WIDTH);
+
+    // Item
+    if (state.spotItem) {
+        const size = 50;
+        sprites.draw(ctx, [WIDTH * state.spotItem.pos[0] - size / 2, HEIGHT * state.spotItem.pos[1] - size / 2], 2, 50);
+    }
     
     // light
     ctx.fillStyle = light;

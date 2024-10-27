@@ -15,7 +15,12 @@ export type State = {
     mousePos: XY,
     items: Item[],
     shopsGenerated:boolean,
-    health: number
+    health: number,
+    spotItem?:{
+        pos:XY,
+        id:number
+    },
+    clickPos?:XY
 };
 
 export function initState(): State {

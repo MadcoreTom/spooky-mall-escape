@@ -58,6 +58,8 @@ export class BatItem extends Item {
 
 export class DoorItem extends Item {
     private anim = 0;
+    private location:XY = [Math.random(),Math.random()];
+    private itemIdx: 1;
     constructor(pos: XY) {
         super();
         this.pos = pos;
@@ -70,6 +72,10 @@ export class DoorItem extends Item {
 
         if (this.inRangeOfPlayer(state) && keyDown(ControlKey.UP)) {
             state.mode = "spotlight";
+            state.spotItem = {
+                pos:this.location,
+                id:this.itemIdx
+            }
         }
         return true;
     }

@@ -24,6 +24,15 @@ export function update(state: State, delta: number) {
 }
 
 export function updateSpotlight(state: State, delta: number) {
+    if(state.clickPos && state.spotItem){
+        const dx = state.spotItem.pos[0] - state.clickPos[0];
+        const dy = state.spotItem.pos[1] - state.clickPos[1];
+        const dsq = dx*dx+dy*dy;
+
+        if(dsq < 0.05*0.05){
+            state.mode = "walk";
+        }
+    }
 }
 
 export function updateMaze(state: State, delta: number) {

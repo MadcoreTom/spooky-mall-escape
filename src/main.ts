@@ -23,7 +23,11 @@ let lastTime = 0;
 canvas.addEventListener("mousemove", evt=>{
     state.mousePos[0] = evt.offsetX;
     state.mousePos[1] = evt.offsetY;
-})
+});
+
+canvas.addEventListener("click", evt => {
+    state.clickPos = [evt.offsetX / WIDTH, evt.offsetY / HEIGHT];
+});
 
 function tick(time) {
     const delta = Math.min(100, time - lastTime);
@@ -32,6 +36,8 @@ function tick(time) {
     update(state, delta);
 
     render(state, ctx, [WIDTH, HEIGHT]);
+
+    state.clickPos = undefined;
 
     window.requestAnimationFrame(tick);
 }

@@ -7,6 +7,7 @@ const player = new MyImage("player.png", 1,4);
 const scenes = new MyImage("scene.png", 3,1);
 const instructions = new MyImage("instructions.png", 3,2);
 const sprites = new MyImage("items.png", 20,1);
+const splash = new MyImage("splash.png", 2,1);
 const SCALE = 400;
 const PLAYER_SIZE = 0.2;
 
@@ -25,20 +26,23 @@ export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGH
         gradient.addColorStop(1, "rgb(22,8,26)");
     }
 
-    if(state.mode == "walk"){
-        renderWalk(state,ctx,[WIDTH,HEIGHT]);
-    } else  if(state.mode == "spotlight"){
-        renderSpotlight(state,ctx,[WIDTH,HEIGHT]);
-    }
-
-    if (state.mode != "dead") {
-        instructions.draw(ctx, [0, HEIGHT - 50], state.mode == "walk" ? 0 : 2, 50);
-        instructions.draw(ctx, [50, HEIGHT - 50], state.mode == "walk" ? 1 : 3, 50);
-    } else {
+    if (state.mode == "walk") {
+        renderWalk(state, ctx, [WIDTH, HEIGHT]);
+        instructions.draw(ctx, [0, HEIGHT - 50], 0, 50);
+        instructions.draw(ctx, [50, HEIGHT - 50], 1, 50);
+    } else if (state.mode == "spotlight") {
+        renderSpotlight(state, ctx, [WIDTH, HEIGHT]);
+        instructions.draw(ctx, [0, HEIGHT - 50], 2, 50);
+        instructions.draw(ctx, [50, HEIGHT - 50], 3, 50);
+    } else if (state.mode == "start") {
+        splash.draw(ctx, [0, 0], 0, WIDTH);
+    } else if (state.mode == "end") {
+        splash.draw(ctx, [0, 0], 1, WIDTH);
+    } else if (state.mode == "dead") {
         ctx.fillStyle = "rgb(22,8,26)";
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        instructions.draw(ctx, [WIDTH / 2 - 50, HEIGHT /2-50], 4, 100);
-        instructions.draw(ctx, [WIDTH / 2 + 50, HEIGHT /2-50], 5, 100);
+        instructions.draw(ctx, [WIDTH / 2 - 50, HEIGHT / 2 - 50], 4, 100);
+        instructions.draw(ctx, [WIDTH / 2 + 50, HEIGHT / 2 - 50], 5, 100);
     }
 }
 

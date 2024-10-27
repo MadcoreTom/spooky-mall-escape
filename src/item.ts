@@ -1,5 +1,5 @@
 import { ControlKey, keyDown } from "./keyboard";
-import { COLLECT, HURT, MENU_SELECT, SOUND } from "./sound";
+import { COLLECT, HURT, MENU_SELECT, SOUND, WIN } from "./sound";
 import { State, XY } from "./state";
 import { pickRandom } from "./util";
 
@@ -130,6 +130,25 @@ export class SpiderItem extends Item {
             this.pos[0] += this.run[0] * delta / 1000;
             this.pos[1] += this.run[1] * delta / 1000;
             this.sprite = 14 + Math.floor((this.runTimer / 50)%2);
+        }
+        return true;
+    }
+}
+
+
+export class ExitItem extends Item {
+    constructor(pos: XY) {
+        super();
+        this.pos = pos;
+        this.sprite = 0;
+    }
+
+    public update(state: State, delta: number) {
+
+        if (this.inRangeOfPlayer(state) && state.keys > 0) {
+            SOUND.playSound(WIN);
+            state.mode = "end";
+            return false;
         }
         return true;
     }

@@ -1,4 +1,4 @@
-import { BatItem, DoorItem, HealthItem, SpiderItem, StaticItem } from "./item";
+import { BatItem, DoorItem, ExitItem, HealthItem, SpiderItem, StaticItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
 import { calcDistance } from "./maze";
 import { COLLECT, SFX_DIE, SOUND } from "./sound";
@@ -12,14 +12,26 @@ const WALK_SPEED = 0.002;
 export function update(state: State, delta: number) {
     if (state.mode == "walk") {
         updateMaze(state, delta);
-    } else if(state.mode == "spotlight"){
+    } else if (state.mode == "spotlight") {
         updateSpotlight(state, delta);
     } else {
-        if (keyPressed(ControlKey.UP) || keyPressed(ControlKey.DOWN) || keyPressed(ControlKey.LEFT) || keyPressed(ControlKey.RIGHT)) {
-            const newState = initState();
-            Object.entries(newState).forEach(([k, v]) => {
-                state[k] = v;
-            })
+        if (state.clickPos) {
+            state.clickPos = undefined;
+
+            if (state.mode == "dead") {
+                state.mode = "start";
+            } else if (state.mode == "start") {
+                // restart
+
+                const newState = initState();
+                Object.entries(newState).forEach(([k, v]) => {
+                    state[k] = v;
+                })
+                state.mode = "walk";
+
+            } else if (state.mode == "end") {
+                state.mode = "start";
+            }
         }
     }
 }
@@ -156,7 +168,7 @@ export function updateMaze(state: State, delta: number) {
 
             // add something at the end
             state.items.push(
-                new StaticItem([farthest[0] + 0.5, farthest[1]+0.5],0)
+                new ExitItem([farthest[0] + 0.5, farthest[1]+0.5])
             );
 
             state.shopsGenerated = true;

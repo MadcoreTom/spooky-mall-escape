@@ -1,9 +1,9 @@
 import { Arr2 } from "./arr2"
+import { BatItem, Item, StaticItem } from "./item";
 import { mazeGenerator } from "./maze";
 
 export type XY = [number, number];
 
-export type Item = { pos: XY, sprite: number };
 
 export type State = {
     maze: Arr2<{ solid: boolean, room: number }>,
@@ -29,8 +29,9 @@ export function initState(): State {
         mode: "walk",
         mousePos: [100, 100],
         items: [
-            { pos: [1.5, 1.5], sprite: 1 },
-            { pos: [3.5, 3.5], sprite: 4 }
+            new StaticItem([1.5, 1.5], 1),
+            new StaticItem([3.5, 3.5], 4),
+            new BatItem([1.5, 3.5], 0.25)
         ]
     }
 }

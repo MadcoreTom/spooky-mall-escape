@@ -74,6 +74,8 @@ function update(state: State, delta: number) {
         }
     }
 
+    state.items.forEach(i=>i.update(state,delta));
+
     if(keyPressed(ControlKey.DEBUG)){
         state.mode = state.mode == "spotlight" ? "walk" : "spotlight";
     }

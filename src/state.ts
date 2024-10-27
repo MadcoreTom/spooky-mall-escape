@@ -14,7 +14,8 @@ export type State = {
     mode: "walk" | "spotlight",
     mousePos: XY,
     items: Item[],
-    shopsGenerated:boolean
+    shopsGenerated:boolean,
+    health: number
 };
 
 export function initState(): State {
@@ -31,9 +32,8 @@ export function initState(): State {
         mousePos: [100, 100],
         items: [
             new StaticItem([1.5, 1.5], 1),
-            new StaticItem([3.5, 3.5], 4),
-            new BatItem([1.5, 3.5], 0.25)
         ],
-        shopsGenerated:false
+        shopsGenerated:false,
+        health: 3
     }
 }

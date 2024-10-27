@@ -4,7 +4,7 @@ import { State, XY } from "./state";
 export abstract class Item {
     public pos: XY;
     public sprite: number;
-    public abstract update(state: State, delta: number);
+    public abstract update(state: State, delta: number): boolean;
 
     protected inRangeOfPlayer(state: State): boolean {
         const dx = this.pos[0] - state.pos[0];
@@ -22,12 +22,12 @@ export class StaticItem extends Item {
     }
 
     public update(state: State, delta: number) {
-        // do nothing
+        return true;
     }
 }
 
 export class BatItem extends Item {
-    private angle = 0;
+    private angle = Math.PI * 2 * Math.random();
     constructor(public centre: XY, public radius: number) {
         super();
         this.pos = [
@@ -47,8 +47,11 @@ export class BatItem extends Item {
 
 
         if (this.inRangeOfPlayer(state)) {
-            console.log("BIP")
+            console.log("BIP");
+            state.health--;
+            return false;
         }
+        return true;
     }
 }
 
@@ -63,10 +66,27 @@ export class DoorItem extends Item {
 
     public update(state: State, delta: number) {
         this.anim += delta;
-        this.sprite = Math.floor((this.anim / 200)%2)+7;
+        this.sprite = Math.floor((this.anim / 200) % 2) + 7;
 
         if (this.inRangeOfPlayer(state) && keyDown(ControlKey.UP)) {
             state.mode = "spotlight";
         }
+        return true;
+    }
+}
+export class HealthItem extends Item {
+    constructor(pos: XY) {
+        super();
+        this.pos = pos;
+        this.sprite = 4;
+    }
+
+    public update(state: State, delta: number) {
+
+        if (this.inRangeOfPlayer(state) && state.health < 5) {
+            state.health++;
+            return false;
+        }
+        return true;
     }
 }

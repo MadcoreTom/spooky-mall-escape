@@ -1,9 +1,11 @@
-import { DoorItem } from "./item";
+import { BatItem, DoorItem, HealthItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
 import { State, XY } from "./state";
 import { shuffle } from "./util";
 
 const SHOP_COUNT = 8;
+const CANDY_COUNT = 5;
+const BAT_COUNT = 15;
 const WALK_SPEED = 0.002;
 export function update(state: State, delta: number) {
     if (state.mode == "walk") {
@@ -22,7 +24,7 @@ export function updateMaze(state: State, delta: number) {
     if (n.done) {
 
         if (!state.shopsGenerated) {
-            const options: XY[] = [];
+            let options: XY[] = [];
             state.maze.forEach((x, y, v) => {
                 if (v.solid == false && state.maze.get(x, y - 1).solid == true) {
                     options.push([x, y]);
@@ -34,6 +36,35 @@ export function updateMaze(state: State, delta: number) {
                     new DoorItem([options[i][0] + 0.5, options[i][1] + 0.1])
                 )
             }
+
+            // add health
+            options= [];
+            state.maze.forEach((x, y, v) => {
+                if (v.solid == false) {
+                    options.push([x, y]);
+                }
+            });
+            shuffle(options);
+            for (let i = 0; i < options.length && i < CANDY_COUNT; i++) {
+                state.items.push(
+                    new HealthItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()])
+                );
+            }
+
+            // add bats
+            options= [];
+            state.maze.forEach((x, y, v) => {
+                if (v.solid == false) {
+                    options.push([x, y]);
+                }
+            });
+            shuffle(options);
+            for (let i = 0; i < options.length && i < BAT_COUNT; i++) {
+                state.items.push(
+                    new BatItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()], 0.1 + Math.random()*0.2)
+                );
+            }
+
             state.shopsGenerated = true;
         }
 
@@ -73,9 +104,7 @@ export function updateMaze(state: State, delta: number) {
                 }
             }
         }
-        state.items.forEach(i => i.update(state, delta));
-
-
+        state.items = state.items.filter(i => i.update(state, delta));
     }
 
 

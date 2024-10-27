@@ -79,6 +79,11 @@ export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,H
     // light
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    // Hud
+    for(let i=0;i<5;i++){
+        sprites.draw(ctx,[10+i*50,10],i<state.health ? 4 : 9,50);
+    }
 }
 
 

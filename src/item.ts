@@ -74,8 +74,10 @@ export class DoorItem extends Item {
             state.mode = "spotlight";
             state.spotItem = {
                 pos:this.location,
-                id:this.itemIdx
+                id:this.itemIdx,
+                scene: Math.floor(Math.random()*2)
             }
+            return false;
         }
         return true;
     }

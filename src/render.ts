@@ -3,7 +3,7 @@ import { State, XY } from "./state";
 
 const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
-const scenes = new MyImage("scene.png", 1,1);
+const scenes = new MyImage("scene.png", 2,1);
 const instructions = new MyImage("instructions.png", 3,2);
 const sprites = new MyImage("items.png", 20,1);
 const SCALE = 400;
@@ -50,7 +50,7 @@ export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WI
     light.addColorStop(0.4, "rgba(22,8,26,0.3)");
     light.addColorStop(1, "rgb(22,8,26)");
 
-    scenes.draw(ctx,[0,0],0, WIDTH);
+    scenes.draw(ctx,[0,0],state.spotItem?.scene || 0, WIDTH);
 
     // Item
     if (state.spotItem) {

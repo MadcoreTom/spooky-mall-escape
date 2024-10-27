@@ -18,7 +18,8 @@ export type State = {
     health: number,
     spotItem?:{
         pos:XY,
-        id:number
+        id:number,
+        scene:number
     },
     clickPos?:XY
 };

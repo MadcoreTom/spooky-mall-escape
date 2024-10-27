@@ -11,7 +11,7 @@ export type State = {
     pos: XY,
     walkFrame: number,
     walkTimer: number,
-    mode: "walk" | "spotlight",
+    mode: "walk" | "spotlight" | "dead",
     mousePos: XY,
     items: Item[],
     shopsGenerated:boolean,

@@ -1,18 +1,25 @@
 import { BatItem, DoorItem, HealthItem, StaticItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
 import { calcDistance } from "./maze";
-import { State, XY } from "./state";
+import { initState, State, XY } from "./state";
 import { shuffle } from "./util";
 
 const SHOP_COUNT = 8;
 const CANDY_COUNT = 5;
-const BAT_COUNT = 15;
+const BAT_COUNT = 16;
 const WALK_SPEED = 0.002;
 export function update(state: State, delta: number) {
     if (state.mode == "walk") {
         updateMaze(state, delta);
-    } else {
+    } else if(state.mode == "spotlight"){
         updateSpotlight(state, delta);
+    } else {
+        if (keyPressed(ControlKey.UP) || keyPressed(ControlKey.DOWN) || keyPressed(ControlKey.LEFT) || keyPressed(ControlKey.RIGHT)) {
+            const newState = initState();
+            Object.entries(newState).forEach(([k, v]) => {
+                state[k] = v;
+            })
+        }
     }
 }
 
@@ -21,6 +28,11 @@ export function updateSpotlight(state: State, delta: number) {
 
 export function updateMaze(state: State, delta: number) {
     const n = state.generator.next();
+
+    if(state.health <= 0){
+        state.mode = "dead";
+        return;
+    }
 
     if (n.done) {
 

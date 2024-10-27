@@ -4,7 +4,7 @@ import { State, XY } from "./state";
 const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
 const scenes = new MyImage("scene.png", 1,1);
-const instructions = new MyImage("instructions.png", 2,2);
+const instructions = new MyImage("instructions.png", 3,2);
 const sprites = new MyImage("items.png", 20,1);
 const SCALE = 400;
 const PLAYER_SIZE = 0.2;
@@ -30,8 +30,15 @@ export function render(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGH
         renderSpotlight(state,ctx,[WIDTH,HEIGHT]);
     }
 
-    instructions.draw(ctx,[0,HEIGHT-50],state.mode=="walk" ? 0 : 2,50)
-    instructions.draw(ctx,[50,HEIGHT-50],state.mode=="walk" ? 1 : 3,50)
+    if (state.mode != "dead") {
+        instructions.draw(ctx, [0, HEIGHT - 50], state.mode == "walk" ? 0 : 2, 50);
+        instructions.draw(ctx, [50, HEIGHT - 50], state.mode == "walk" ? 1 : 3, 50);
+    } else {
+        ctx.fillStyle = "rgb(22,8,26)";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        instructions.draw(ctx, [WIDTH / 2 - 50, HEIGHT /2-50], 4, 100);
+        instructions.draw(ctx, [WIDTH / 2 + 50, HEIGHT /2-50], 5, 100);
+    }
 }
 
 export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGHT]:XY) {

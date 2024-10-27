@@ -1,4 +1,4 @@
-import { BatItem, DoorItem, HealthItem, StaticItem } from "./item";
+import { BatItem, DoorItem, HealthItem, SpiderItem, StaticItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
 import { calcDistance } from "./maze";
 import { COLLECT, SFX_DIE, SOUND } from "./sound";
@@ -136,6 +136,21 @@ export function updateMaze(state: State, delta: number) {
             for (let i = 0; i < options.length && i < count; i++) {
                 state.items.push(
                     new StaticItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()],Math.floor(Math.random() * 4)+10)
+                );
+            }
+
+            // add spiders
+            options= [];
+            state.maze.forEach((x, y, v) => {
+                if (v.solid == false) {
+                    options.push([x, y]);
+                }
+            });
+            shuffle(options);
+            const count2 = options.length /2;
+            for (let i = 0; i < options.length && i < count2; i++) {
+                state.items.push(
+                    new SpiderItem ([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()])
                 );
             }
 

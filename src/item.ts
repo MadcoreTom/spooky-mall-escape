@@ -8,11 +8,11 @@ export abstract class Item {
     public sprite: number;
     public abstract update(state: State, delta: number): boolean;
 
-    protected inRangeOfPlayer(state: State): boolean {
+    protected inRangeOfPlayer(state: State, range:number=0.15): boolean {
         const dx = this.pos[0] - state.pos[0];
         const dy = this.pos[1] - state.pos[1];
         const dsq = dx * dx + dy * dy;
-        return dsq < 0.15 * 0.15;
+        return dsq < range*range;
     }
 };
 
@@ -100,6 +100,36 @@ export class HealthItem extends Item {
             state.health++;
             SOUND.playSound(COLLECT);
             return false;
+        }
+        return true;
+    }
+}
+
+export class SpiderItem extends Item {
+    private run:XY =[0,0];
+    private runTimer = -1;
+
+    constructor(pos: XY) {
+        super();
+        this.pos = pos;
+        this.sprite = 14;
+    }
+
+    public update(state: State, delta: number) {
+        if(this.runTimer >52000){
+            return false
+        } if (this.runTimer < 0) {
+            if (this.inRangeOfPlayer(state, 0.5)) {
+                this.runTimer = 0;
+                const a =Math.random() * Math.PI * 2;
+                this.run = [Math.sin(a),Math.cos(a)];
+            }
+
+        } else {
+            this.runTimer += delta;
+            this.pos[0] += this.run[0] * delta / 1000;
+            this.pos[1] += this.run[1] * delta / 1000;
+            this.sprite = 14 + Math.floor((this.runTimer / 50)%2);
         }
         return true;
     }

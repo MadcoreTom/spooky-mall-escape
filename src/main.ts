@@ -1,6 +1,8 @@
+import { DoorItem, StaticItem } from "./item";
 import { ControlKey, initKeyboard, keyDown, keyPressed } from "./keyboard";
 import { render } from "./render";
 import { initState, State, XY } from "./state";
+import { shuffle } from "./util";
 
 const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -33,11 +35,31 @@ function tick(time) {
     window.requestAnimationFrame(tick);
 }
 
+const SHOP_COUNT = 8;
 const WALK_SPEED = 0.002;
 function update(state: State, delta: number) {
     const n = state.generator.next();
 
     if (n.done) {
+
+        if (!state.shopsGenerated) {
+            const options: XY[] = [];
+            state.maze.forEach((x, y, v) => {
+                if (v.solid == false && state.maze.get(x, y - 1).solid == true) {
+                    options.push([x, y]);
+                }
+            });
+            shuffle(options);
+            for (let i = 0; i < options.length && i < SHOP_COUNT; i++) {
+                state.items.push(
+                    new DoorItem([options[i][0] + 0.5, options[i][1] + 0.1])
+                )
+            }
+            state.shopsGenerated = true;
+        }
+
+
+
         const movement: XY = [0, 0];
         if (keyDown(ControlKey.UP)) {
             movement[1] = -delta * WALK_SPEED;
@@ -72,9 +94,11 @@ function update(state: State, delta: number) {
                 }
             }
         }
+        state.items.forEach(i=>i.update(state,delta));
+
+
     }
 
-    state.items.forEach(i=>i.update(state,delta));
 
     if(keyPressed(ControlKey.DEBUG)){
         state.mode = state.mode == "spotlight" ? "walk" : "spotlight";

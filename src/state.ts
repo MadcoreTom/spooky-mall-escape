@@ -13,7 +13,8 @@ export type State = {
     walkTimer: number,
     mode: "walk" | "spotlight",
     mousePos: XY,
-    items: Item[]
+    items: Item[],
+    shopsGenerated:boolean
 };
 
 export function initState(): State {
@@ -32,6 +33,7 @@ export function initState(): State {
             new StaticItem([1.5, 1.5], 1),
             new StaticItem([3.5, 3.5], 4),
             new BatItem([1.5, 3.5], 0.25)
-        ]
+        ],
+        shopsGenerated:false
     }
 }

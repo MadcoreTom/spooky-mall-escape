@@ -71,13 +71,12 @@ export function updateMaze(state: State, delta: number) {
             state.pos[0] = start[0] + 0.5;
             state.pos[1] = start[1] + 0.5;
             const farthest = calcDistance(state.maze, start);
-            console.log("start",start,state.maze.get(start[0], start[1]).distance,"farthest", farthest,state.maze.get(farthest[0], farthest[1]).distance )
 
             // make the golden path
+            // TODO do something with it
             {
                 let cur: XY = [farthest[0], farthest[1]];
                 let curDist = state.maze.get(cur[0], cur[1]).distance;
-                console.log("CD",curDist)
 
                 const deltas: XY[] = [[-1, 0], [1, 0], [0, 1], [0, -1]];
 
@@ -91,7 +90,6 @@ export function updateMaze(state: State, delta: number) {
                     } else {
                         curDist = 0;
                     }
-                    console.log(...cur, curDist)
                 }
             }
 

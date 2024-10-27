@@ -77,8 +77,8 @@ export class DoorItem extends Item {
             state.spotItem = {
                 pos: this.location,
                 id: this.itemIdx,
-                scene: Math.floor(Math.random() * 3),
-                item: this.isKey ? 1 : pickRandom([3, 19])
+                scene: Math.floor(Math.random() * 5),
+                item: this.isKey ? 1 : pickRandom([3, 19,18, 17, 16])
             }
             SOUND.playSound(MENU_SELECT);
             return false;

@@ -4,7 +4,7 @@ import { State, XY } from "./state";
 
 const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
-const scenes = new MyImage("scene.png", 3,1);
+const scenes = new MyImage("scene.png", 5,1);
 const instructions = new MyImage("instructions.png", 3,2);
 const sprites = new MyImage("items.png", 20,1);
 const splash = new MyImage("splash.png", 2,1);

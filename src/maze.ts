@@ -93,7 +93,6 @@ export function calcDistance<T extends { solid: boolean, distance: number }>(arr
             arr.get(cur[0],cur[1]).distance =0;
         } else {
             arr.get(cur[0],cur[1]).distance = 1+ Math.min(...neighbours.map(a=>a.distance).filter(a=>a >= 0));
-            console.log("d",arr.get(cur[0],cur[1]).distance)
         }
         // add neighbours without distance
         if(neighbours[0].distance == BIG_NUMBER){
@@ -108,7 +107,6 @@ export function calcDistance<T extends { solid: boolean, distance: number }>(arr
         if(neighbours[3].distance == BIG_NUMBER){
             queue.push([cur[0]+1,cur[1]]);
         }
-        console.log(queue.length);
         farthest = cur;
     }
     return farthest;

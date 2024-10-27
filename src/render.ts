@@ -1,4 +1,5 @@
 import { MyImage } from "./image";
+import { ControlKey, keyDown } from "./keyboard";
 import { State, XY } from "./state";
 
 const tiles = new MyImage("tiles.png", 4,12);
@@ -55,7 +56,7 @@ export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WI
     // Item
     if (state.spotItem) {
         const size = 50;
-        sprites.draw(ctx, [WIDTH * state.spotItem.pos[0] - size / 2, HEIGHT * state.spotItem.pos[1] - size / 2], 2, 50);
+        sprites.draw(ctx, [WIDTH * state.spotItem.pos[0] - size / 2, HEIGHT * state.spotItem.pos[1] - size / 2], state.spotItem.item, 50);
     }
     
     // light
@@ -67,14 +68,23 @@ export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,H
 
 
     // background
-    const sx = Math.floor(state.pos[0]-2);
-    const sy = Math.floor(state.pos[1]-2);
-    for(let x=0;x<5;x++){
-        for(let y=0;y<5;y++){
-            drawTile(ctx, state, [x + sx, y+sy], [
-                Math.floor(state.pos[0]  * SCALE - WIDTH / 2),
-                 Math.floor(state.pos[1] * SCALE - HEIGHT / 2)
+    ctx.fillStyle = "red"
+    ctx.font = "bold 20px monospace";
+    const debug = keyDown(ControlKey.DEBUG);
+    const sx = Math.floor(state.pos[0] - 2);
+    const sy = Math.floor(state.pos[1] - 2);
+    for (let x = 0; x < 5; x++) {
+        for (let y = 0; y < 5; y++) {
+            drawTile(ctx, state, [x + sx, y + sy], [
+                Math.floor(state.pos[0] * SCALE - WIDTH / 2),
+                Math.floor(state.pos[1] * SCALE - HEIGHT / 2)
             ]);
+            if (debug) {
+                ctx.fillText(">>" + state.maze.get(x + sx, y + sy).distance + ", " + state.maze.get(x + sx, y + sy).mainPath,
+                    WIDTH / 2 + (x + sx - state.pos[0] + 0.5) * SCALE,
+                    HEIGHT / 2 + (y + sy - state.pos[1] + 0.5) * SCALE
+                );
+            }
         }
     }
 
@@ -96,6 +106,12 @@ export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,H
     // Hud
     for(let i=0;i<5;i++){
         sprites.draw(ctx,[10+i*50,10],i<state.health ? 4 : 9,50);
+    }
+    for(let i=0;i<state.keys;i++){
+        sprites.draw(ctx,[10+i*50,60],1,50);
+    }
+    if(state.keys == 0){
+        sprites.draw(ctx,[10,60],2,50);
     }
 }
 

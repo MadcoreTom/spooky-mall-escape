@@ -31,6 +31,9 @@ export function updateSpotlight(state: State, delta: number) {
         const dsq = dx*dx+dy*dy;
 
         if(dsq < 0.05*0.05){
+            if(state.spotItem.item == 1){
+                state.keys ++;
+            }
             SOUND.playSound(COLLECT);
             state.mode = "walk";
         }
@@ -38,7 +41,10 @@ export function updateSpotlight(state: State, delta: number) {
 }
 
 export function updateMaze(state: State, delta: number) {
-    const n = state.generator.next();
+    let n = state.generator.next();
+    if(!n.done){
+        n = state.generator.next();
+    }
 
     if(state.health <= 0){
         SOUND.playSound(SFX_DIE);
@@ -49,7 +55,33 @@ export function updateMaze(state: State, delta: number) {
     if (n.done) {
 
         if (!state.shopsGenerated) {
-            const farthest = calcDistance(state.maze, [Math.floor(state.pos[0]), Math.floor(state.pos[1])])
+            const start = calcDistance(state.maze, [1,1])
+            state.pos[0] = start[0] + 0.5;
+            state.pos[1] = start[1] + 0.5;
+            const farthest = calcDistance(state.maze, start);
+            console.log("start",start,state.maze.get(start[0], start[1]).distance,"farthest", farthest,state.maze.get(farthest[0], farthest[1]).distance )
+
+            // make the golden path
+            {
+                let cur: XY = [farthest[0], farthest[1]];
+                let curDist = state.maze.get(cur[0], cur[1]).distance;
+                console.log("CD",curDist)
+
+                const deltas: XY[] = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+
+                while (curDist != 0) {
+                    state.maze.get(cur[0], cur[1]).mainPath = true;
+                    const next = deltas.filter(([x, y]) => !state.maze.get(cur[0]+x, cur[1]+y).solid && state.maze.get(cur[0]+x, cur[1]+y).distance < curDist)[0];
+                    if (next != undefined) {
+                        curDist = state.maze.get(cur[0]+next[0], cur[1]+next[1]).distance;
+                        cur[0] += next[0];
+                        cur[1] += next[1];
+                    } else {
+                        curDist = 0;
+                    }
+                    console.log(...cur, curDist)
+                }
+            }
 
             let options: XY[] = [];
             state.maze.forEach((x, y, v) => {
@@ -60,7 +92,7 @@ export function updateMaze(state: State, delta: number) {
             shuffle(options);
             for (let i = 0; i < options.length && i < SHOP_COUNT; i++) {
                 state.items.push(
-                    new DoorItem([options[i][0] + 0.5, options[i][1] + 0.1])
+                    new DoorItem([options[i][0] + 0.5, options[i][1] + 0.1], i==0)
                 )
             }
 
@@ -92,20 +124,20 @@ export function updateMaze(state: State, delta: number) {
                 );
             }
 
-               // add decorations
-               options= [];
-               state.maze.forEach((x, y, v) => {
-                   if (v.solid == false && v.distance %2==1) {
-                       options.push([x, y]);
-                   }
-               });
-               shuffle(options);
-               const count = options.length /2;
-               for (let i = 0; i < options.length && i < count; i++) {
-                   state.items.push(
-                       new StaticItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()],Math.floor(Math.random() * 4)+10)
-                   );
-               }
+            // add decorations
+            options= [];
+            state.maze.forEach((x, y, v) => {
+                if (v.solid == false && v.distance %2==1 || v.distance % 3 == 1) {
+                    options.push([x, y]);
+                }
+            });
+            shuffle(options);
+            const count = options.length /2;
+            for (let i = 0; i < options.length && i < count; i++) {
+                state.items.push(
+                    new StaticItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()],Math.floor(Math.random() * 4)+10)
+                );
+            }
 
             // add something at the end
             state.items.push(
@@ -153,12 +185,5 @@ export function updateMaze(state: State, delta: number) {
         }
         state.items = state.items.filter(i => i.update(state, delta));
 
-        console.log("Distance", state.maze.get(Math.floor(state.pos[0]),Math.floor(state.pos[1])).distance);
     }
-
-
-    if (keyPressed(ControlKey.DEBUG)) {
-        state.mode = state.mode == "spotlight" ? "walk" : "spotlight";
-    }
-
 }

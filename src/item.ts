@@ -1,6 +1,7 @@
 import { ControlKey, keyDown } from "./keyboard";
 import { COLLECT, HURT, MENU_SELECT, SOUND } from "./sound";
 import { State, XY } from "./state";
+import { pickRandom } from "./util";
 
 export abstract class Item {
     public pos: XY;
@@ -59,9 +60,9 @@ export class BatItem extends Item {
 
 export class DoorItem extends Item {
     private anim = 0;
-    private location:XY = [Math.random(),Math.random()];
+    private location: XY = [0.05 + Math.random() * 0.9, 0.05 + Math.random() * 0.9];
     private itemIdx: 1;
-    constructor(pos: XY) {
+    constructor(pos: XY, private readonly isKey) {
         super();
         this.pos = pos;
         this.sprite = 7;
@@ -74,9 +75,10 @@ export class DoorItem extends Item {
         if (this.inRangeOfPlayer(state) && keyDown(ControlKey.UP)) {
             state.mode = "spotlight";
             state.spotItem = {
-                pos:this.location,
-                id:this.itemIdx,
-                scene: Math.floor(Math.random()*3)
+                pos: this.location,
+                id: this.itemIdx,
+                scene: Math.floor(Math.random() * 3),
+                item: this.isKey ? 1 : pickRandom([3, 19])
             }
             SOUND.playSound(MENU_SELECT);
             return false;
@@ -84,6 +86,7 @@ export class DoorItem extends Item {
         return true;
     }
 }
+
 export class HealthItem extends Item {
     constructor(pos: XY) {
         super();

@@ -17,12 +17,13 @@ const KEY_MAP: { [id: string]: ControlKey } = {
 	"KeyA": ControlKey.LEFT,
 	"ArrowRight": ControlKey.RIGHT,
 	"KeyD": ControlKey.RIGHT,
-	"KeyP": ControlKey.DEBUG
+	"Backquote": ControlKey.DEBUG
 };
 
 const keys = {};
 
 function setKey(code: string, down: boolean) {
+	SOUND.resume();
 	const c = KEY_MAP[code];
 	if (c != undefined) {
 		keys[c] = down;
@@ -46,7 +47,6 @@ export function keyDown(keyCode: ControlKey) {
 }
 
 export function keyPressed(keyCode: ControlKey) {
-	SOUND.resume();
 	if (keys[keyCode]) {
 		keys[keyCode] = false;
 		return true;

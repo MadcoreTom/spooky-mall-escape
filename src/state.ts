@@ -6,7 +6,7 @@ export type XY = [number, number];
 
 
 export type State = {
-    maze: Arr2<{ solid: boolean, room: number }>,
+    maze: Arr2<{ solid: boolean, room: number, distance:number }>,
     generator: Iterator<void, void>,
     pos: XY,
     walkFrame: number,
@@ -19,9 +19,9 @@ export type State = {
 };
 
 export function initState(): State {
-    const maze = new Arr2(25, 7, { solid: true, room: -1 });
+    const maze = new Arr2(25, 7, { solid: true, room: -1,distance:0 });
 
-    maze.fill(() => ({ solid: true, room: -1 }));
+    maze.fill(() => ({ solid: true, room: -1,distance:0 }));
     return {
         maze,
         generator: mazeGenerator(maze),

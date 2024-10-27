@@ -66,3 +66,48 @@ export function* mazeGenerator<T extends RoomTile>(arr: Arr2<T>): Iterator<void,
     console.log("Done");
 
 }
+
+/**
+ * 
+ * @param arr Calculates distance from the start
+ * @returns the farthest tile
+ */
+export function calcDistance<T extends { solid: boolean, distance: number }>(arr: Arr2<T>, start:XY) :XY{
+    // reset
+    const BIG_NUMBER = 999;
+    arr.forEach((x, y, v) => v.distance = v.solid ? -1 : BIG_NUMBER);
+
+    const queue = [start];
+
+    let farthest : XY = start;
+    let cur:XY | undefined;
+    while((cur = queue.shift()) != undefined){
+        const neighbours = [
+            arr.get(cur[0],cur[1]-1),
+            arr.get(cur[0],cur[1]+1),
+            arr.get(cur[0]-1,cur[1]),
+            arr.get(cur[0]+1,cur[1])
+        ]
+        // calc distance
+        if(cur == start){
+            arr.get(cur[0],cur[1]).distance =0;
+        } else {
+            arr.get(cur[0],cur[1]).distance = 1+ Math.min(...neighbours.map(a=>a.distance).filter(a=>a >= 0));
+        }
+        // add neighbours without distance
+        if(neighbours[0].distance == BIG_NUMBER){
+            queue.push([cur[0],cur[1]-1]);
+        }
+        if(neighbours[1].distance == BIG_NUMBER){
+            queue.push([cur[0],cur[1]+1]);
+        }
+        if(neighbours[2].distance == BIG_NUMBER){
+            queue.push([cur[0]-1,cur[1]]);
+        }
+        if(neighbours[3].distance == BIG_NUMBER){
+            queue.push([cur[0]+1,cur[1]]);
+        }
+        farthest = cur;
+    }
+    return farthest;
+}

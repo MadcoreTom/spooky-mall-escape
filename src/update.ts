@@ -1,5 +1,6 @@
-import { BatItem, DoorItem, HealthItem } from "./item";
+import { BatItem, DoorItem, HealthItem, StaticItem } from "./item";
 import { ControlKey, keyDown, keyPressed } from "./keyboard";
+import { calcDistance } from "./maze";
 import { State, XY } from "./state";
 import { shuffle } from "./util";
 
@@ -24,6 +25,8 @@ export function updateMaze(state: State, delta: number) {
     if (n.done) {
 
         if (!state.shopsGenerated) {
+            const farthest = calcDistance(state.maze, [Math.floor(state.pos[0]), Math.floor(state.pos[1])])
+
             let options: XY[] = [];
             state.maze.forEach((x, y, v) => {
                 if (v.solid == false && state.maze.get(x, y - 1).solid == true) {
@@ -54,7 +57,7 @@ export function updateMaze(state: State, delta: number) {
             // add bats
             options= [];
             state.maze.forEach((x, y, v) => {
-                if (v.solid == false) {
+                if (v.solid == false && v.distance > 5) {
                     options.push([x, y]);
                 }
             });
@@ -64,6 +67,26 @@ export function updateMaze(state: State, delta: number) {
                     new BatItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()], 0.1 + Math.random()*0.2)
                 );
             }
+
+               // add decorations
+               options= [];
+               state.maze.forEach((x, y, v) => {
+                   if (v.solid == false && v.distance %2==1) {
+                       options.push([x, y]);
+                   }
+               });
+               shuffle(options);
+               const count = options.length /2;
+               for (let i = 0; i < options.length && i < count; i++) {
+                   state.items.push(
+                       new StaticItem([options[i][0] + 0.25 + 0.5 * Math.random(), options[i][1] + 0.25 + 0.5 * Math.random()],Math.floor(Math.random() * 4)+10)
+                   );
+               }
+
+            // add something at the end
+            state.items.push(
+                new StaticItem([farthest[0] + 0.5, farthest[1]+0.5],0)
+            );
 
             state.shopsGenerated = true;
         }
@@ -105,6 +128,8 @@ export function updateMaze(state: State, delta: number) {
             }
         }
         state.items = state.items.filter(i => i.update(state, delta));
+
+        console.log("Distance", state.maze.get(Math.floor(state.pos[0]),Math.floor(state.pos[1])).distance);
     }
 
 

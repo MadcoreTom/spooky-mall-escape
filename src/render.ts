@@ -5,7 +5,7 @@ const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
 const scenes = new MyImage("scene.png", 1,1);
 const instructions = new MyImage("instructions.png", 2,2);
-const sprites = new MyImage("items.png", 10,1);
+const sprites = new MyImage("items.png", 20,1);
 const SCALE = 400;
 const PLAYER_SIZE = 0.2;
 

@@ -5,6 +5,7 @@ const tiles = new MyImage("tiles.png", 4,12);
 const player = new MyImage("player.png", 1,4);
 const scenes = new MyImage("scene.png", 1,1);
 const instructions = new MyImage("instructions.png", 2,2);
+const sprites = new MyImage("items.png", 10,1);
 const SCALE = 400;
 const PLAYER_SIZE = 0.2;
 
@@ -52,7 +53,7 @@ export function renderSpotlight(state: State, ctx: CanvasRenderingContext2D, [WI
 export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,HEIGHT]:XY) {
 
 
-
+    // background
     const sx = Math.floor(state.pos[0]-2);
     const sy = Math.floor(state.pos[1]-2);
     for(let x=0;x<5;x++){
@@ -64,6 +65,15 @@ export function renderWalk(state: State, ctx: CanvasRenderingContext2D, [WIDTH,H
         }
     }
 
+    // Items
+    state.items.forEach(item=>{
+        sprites.draw(ctx, [
+            WIDTH / 2 - PLAYER_SIZE / 2 * SCALE + (item.pos[0] - state.pos[0])*SCALE, 
+            HEIGHT / 2 - PLAYER_SIZE / 2 * SCALE+ (item.pos[1] - state.pos[1])*SCALE
+        ], item.sprite, SCALE * PLAYER_SIZE);
+    })
+
+    // Player
     player.draw(ctx, [WIDTH / 2 - PLAYER_SIZE / 2 * SCALE, HEIGHT / 2 - PLAYER_SIZE / 2 * SCALE], state.walkFrame, SCALE * PLAYER_SIZE);
 
     // light

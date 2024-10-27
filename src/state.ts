@@ -3,6 +3,8 @@ import { mazeGenerator } from "./maze";
 
 export type XY = [number, number];
 
+export type Item = { pos: XY, sprite: number };
+
 export type State = {
     maze: Arr2<{ solid: boolean, room: number }>,
     generator: Iterator<void, void>,
@@ -10,7 +12,8 @@ export type State = {
     walkFrame: number,
     walkTimer: number,
     mode: "walk" | "spotlight",
-    mousePos:XY
+    mousePos: XY,
+    items: Item[]
 };
 
 export function initState(): State {
@@ -24,6 +27,10 @@ export function initState(): State {
         walkFrame: 0,
         walkTimer: 0,
         mode: "walk",
-        mousePos:[100,100]
+        mousePos: [100, 100],
+        items: [
+            { pos: [1.5, 1.5], sprite: 1 },
+            { pos: [3.5, 3.5], sprite: 4 }
+        ]
     }
 }
